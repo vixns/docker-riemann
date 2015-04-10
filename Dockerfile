@@ -1,7 +1,7 @@
 FROM vixns/java8
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
-ENV RIEMANN_VERSION 0.2.8
+ENV RIEMANN_VERSION 0.2.9
 
 RUN curl -L -k -s -O https://aphyr.com/riemann/riemann_${RIEMANN_VERSION}_all.deb
 RUN dpkg -i riemann_${RIEMANN_VERSION}_all.deb
