@@ -1,17 +1,22 @@
-FROM vixns/java8
+FROM java:8
+
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
-ENV RIEMANN_VERSION 0.2.11-20160213-115702
+ENV RIEMANN_VERSION 0.2.11
 
-RUN curl -L -k -s -O https://apt.vixns.net/riemann/riemann_${RIEMANN_VERSION}_all.deb
-RUN dpkg -i riemann_${RIEMANN_VERSION}_all.deb && rm riemann_${RIEMANN_VERSION}_all.deb
+ADD https://aphyr.com/riemann/riemann_${RIEMANN_VERSION}_all.deb /tmp/
+RUN echo "8f074b9ad3321a962d3a32a7a54cf930 /tmp/riemann_${RIEMANN_VERSION}_all.deb" \
+    > /tmp/riemann_${RIEMANN_VERSION}.md5 && \
+    md5sum -c /tmp/riemann_${RIEMANN_VERSION}.md5 && \
+    dpkg -i /tmp/riemann_${RIEMANN_VERSION}_all.deb && \
+    rm /tmp/riemann* && \
+    mkdir -p /etc/riemann/config
 
-RUN mkdir /etc/riemann/config
 COPY riemann.config /etc/riemann/riemann.config
 COPY default.config /etc/riemann/config/99-default.config
-COPY riemann.sh /usr/local/bin/riemann.sh
+COPY riemann.sh /riemann.sh
 
 EXPOSE 5555
 EXPOSE 5556
 
-ENTRYPOINT ["/usr/local/bin/riemann.sh"]
+ENTRYPOINT ["/riemann.sh"]
